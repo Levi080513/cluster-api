@@ -249,4 +249,18 @@ func getClusterNameFromOwnerRef(obj metav1.ObjectMeta) (string, error) {
 		return ref.Name, nil
 	}
 	return "", errors.New("failed to find cluster name in ownerRefs: no cluster ownerRef")
+
+}
+
+// ensureKubernetesServiceCreated ensures that the Service for Kubernetes API Server has been created.
+func ensureKubernetesServiceCreated(ctx context.Context, client client.Client) error {
+	err := client.Get(ctx, types.NamespacedName{
+		Namespace: metav1.NamespaceDefault,
+		Name:      "kubernetes",
+	}, &corev1.Service{})
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
